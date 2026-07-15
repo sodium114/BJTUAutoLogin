@@ -220,12 +220,6 @@ class MainWindow:
                         bg=C_CARD_BG, relief="flat",
                         highlightthickness=0).pack(side=tk.LEFT, padx=(6, 0))
 
-        # 保存按钮
-        btn_row = ttk.Frame(frame)
-        btn_row.pack(fill=tk.X, pady=(8, 0))
-        ttk.Button(btn_row, text="保存配置", style="Primary.TButton",
-                   command=self.on_save_config).pack()
-
     def _build_status_card(self, parent):
         frame = tk.Frame(parent, bg=C_CARD_BG)
         frame.pack(fill=tk.X, pady=(0, 10))
@@ -260,12 +254,12 @@ class MainWindow:
         row = ttk.Frame(parent)
         row.pack(fill=tk.X, pady=(4, 10))
 
-        ttk.Button(row, text="  立即登录  ", style="Primary.TButton",
+        ttk.Button(row, text="  立即登录  ", style="Outline.TButton",
                    command=self.manual_login).pack(side=tk.LEFT, padx=(0, 8))
         ttk.Button(row, text="查看日志", style="Outline.TButton",
                    command=self.view_log).pack(side=tk.LEFT, padx=(0, 8))
-        ttk.Button(row, text="最小化到托盘", style="Outline.TButton",
-                   command=self.minimize_to_tray).pack(side=tk.LEFT)
+        ttk.Button(row, text="保存配置", style="Outline.TButton",
+                   command=self.on_save_config).pack(side=tk.LEFT)
 
     def _build_log(self, parent):
         frame = tk.Frame(parent, bg=C_CARD_BG)
