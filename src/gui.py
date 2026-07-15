@@ -149,29 +149,14 @@ class MainWindow:
         self.root.resizable(False, False)
         self.root.configure(bg=C_BG)
 
-        # 图标 — 同时设置窗口角标和任务栏图标
+        # 图标
         try:
             paths = [os.path.join(get_app_path(), f)
                      for f in ("icon.ico", "resources/icon.ico")]
-            ico_path = None
             for p in paths:
                 if os.path.exists(p):
-                    ico_path = p
+                    self.root.iconbitmap(p)
                     break
-
-            if ico_path:
-                # 设置任务栏图标
-                self.root.iconbitmap(ico_path)
-
-                # 设置窗口左上角图标 (iconphoto 需要 PhotoImage)
-                try:
-                    from PIL import Image, ImageTk
-                    img = Image.open(ico_path)
-                    photo = ImageTk.PhotoImage(img)
-                    self.root.iconphoto(True, photo)
-                    self._icon_photo = photo  # 保持引用防止 GC
-                except ImportError:
-                    pass  # 无 PIL 时仅靠 iconbitmap
         except:
             pass
 
@@ -508,18 +493,8 @@ class MainWindow:
         # 图标
         try:
             icon_path = os.path.join(get_app_path(), 'resources', 'icon.ico')
-            if not os.path.exists(icon_path):
-                icon_path = os.path.join(get_app_path(), 'icon.ico')
             if os.path.exists(icon_path):
                 dialog.iconbitmap(icon_path)
-                try:
-                    from PIL import Image, ImageTk
-                    img = Image.open(icon_path)
-                    photo = ImageTk.PhotoImage(img)
-                    dialog.iconphoto(True, photo)
-                    dialog._icon_photo = photo  # 保持引用
-                except ImportError:
-                    pass
         except:
             pass
 
