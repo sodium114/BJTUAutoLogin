@@ -54,6 +54,67 @@ FONT_SMALL  = ("Microsoft YaHei", 9)
 FONT_MONO   = ("Consolas", 9)
 
 
+# ========== 任务栏固定 ==========
+
+def ensure_taskbar_pinned():
+    """首次运行时将程序固定到任务栏"""
+    config_path = get_config_path()
+    try:
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+    except:
+        config = {}
+
+    if config.get('taskbar_pinned'):
+        return
+
+    try:
+        app_path = get_app_path()
+        shortcut_name = 'BJTUAutoLogin.lnk'
+        shortcut_path = os.path.join(app_path, shortcut_name)
+
+        if getattr(sys, 'frozen', False):
+            target = sys.executable
+            working_dir = os.path.dirname(sys.executable)
+        else:
+            target = os.path.join(app_path, 'run_gui.bat')
+            working_dir = app_path
+
+        icon_path = os.path.join(app_path, 'resources', 'icon.ico')
+        if not os.path.exists(icon_path):
+            icon_path = os.path.join(app_path, 'icon.ico')
+
+        ps = f'''
+$ws = New-Object -ComObject WScript.Shell
+$s = $ws.CreateShortcut("{shortcut_path}")
+$s.TargetPath = "{target}"
+$s.WorkingDirectory = "{working_dir}"
+$s.Description = "BJTU校园网自动登录"
+$s.IconLocation = "{icon_path}"
+$s.Save()
+
+$shell = New-Object -ComObject Shell.Application
+$folder = $shell.Namespace("{working_dir}")
+$item = $folder.ParseName("{shortcut_name}")
+if ($item) {{
+    try {{ $item.InvokeVerb("taskbarpin") }} catch {{}}
+}}
+'''
+        subprocess.run(
+            ['powershell', '-NoProfile', '-Command', ps],
+            capture_output=True,
+            creationflags=CREATE_NO_WINDOW,
+            timeout=10
+        )
+
+        config['taskbar_pinned'] = True
+        os.makedirs(os.path.dirname(config_path), exist_ok=True)
+        with open(config_path, 'w', encoding='utf-8') as f:
+            json.dump(config, f, indent=2, ensure_ascii=False)
+    except:
+        pass  # 静默失败，不影响核心功能
+
+
 # ========== 自定义组件 ==========
 
 class StatusDot(ttk.Frame):
@@ -145,7 +206,9 @@ class MainWindow:
         except:
             return {"username": "", "password": "",
                     "check_interval": 60, "retry_interval": 10,
-                    "test_url": "https://www.baidu.com"}
+                    "test_url": "https://www.baidu.com",
+                    "close_action": "ask", "close_remember": False,
+                    "taskbar_pinned": False}
 
     def save_config(self):
         try:
@@ -395,9 +458,120 @@ class MainWindow:
             pass
 
     def on_closing(self):
-        if self.update_timer:
-            self.root.after_cancel(self.update_timer)
-        self.root.destroy()
+        """关闭窗口时的处理 - 返回 'exit'/'tray'/'cancel'"""
+        action = self.config.get('close_action', 'ask')
+        remember = self.config.get('close_remember', False)
+
+        if remember and action != 'ask':
+            if action == 'tray':
+                self.root.withdraw()
+                return 'tray'
+            else:
+                if self.update_timer:
+                    self.root.after_cancel(self.update_timer)
+                self.root.destroy()
+                return 'exit'
+        else:
+            return self._show_close_dialog()
+
+    def _show_close_dialog(self):
+        """显示关闭方式选择对话框"""
+        dialog = tk.Toplevel(self.root)
+        dialog.title("BJTU校园网自动登录")
+        dialog.geometry("400x210")
+        dialog.resizable(False, False)
+        dialog.configure(bg=C_BG)
+        dialog.transient(self.root)
+        dialog.grab_set()
+
+        # 居中于主窗口
+        dialog.update_idletasks()
+        x = self.root.winfo_x() + (self.root.winfo_width() - 400) // 2
+        y = self.root.winfo_y() + (self.root.winfo_height() - 210) // 2
+        dialog.geometry(f"+{x}+{y}")
+
+        # 图标
+        try:
+            icon_path = os.path.join(get_app_path(), 'resources', 'icon.ico')
+            if os.path.exists(icon_path):
+                dialog.iconbitmap(icon_path)
+        except:
+            pass
+
+        result = {'action': None}
+
+        content = tk.Frame(dialog, bg=C_BG, padx=28, pady=24)
+        content.pack(fill=tk.BOTH, expand=True)
+
+        tk.Label(content, text="请选择关闭方式", font=FONT_HEAD,
+                 fg=C_TEXT, bg=C_BG).pack(anchor=tk.W, pady=(0, 18))
+
+        # 按钮行
+        btn_frame = tk.Frame(content, bg=C_BG)
+        btn_frame.pack(fill=tk.X, pady=(0, 14))
+
+        def do_exit():
+            result['action'] = 'exit'
+            if self._close_remember_var.get():
+                self.config['close_remember'] = True
+                self.config['close_action'] = 'exit'
+                self.save_config()
+            dialog.destroy()
+            if self.update_timer:
+                self.root.after_cancel(self.update_timer)
+            self.root.destroy()
+
+        def do_tray():
+            result['action'] = 'tray'
+            if self._close_remember_var.get():
+                self.config['close_remember'] = True
+                self.config['close_action'] = 'tray'
+                self.save_config()
+            dialog.destroy()
+            self.root.withdraw()
+
+        exit_btn = tk.Button(
+            btn_frame, text="直接退出", font=FONT_BODY,
+            bg=C_BG, fg=C_DANGER,
+            activebackground="#fce8e6", activeforeground=C_DANGER,
+            relief="solid", bd=1,
+            padx=22, pady=7,
+            cursor="hand2",
+            command=do_exit
+        )
+        exit_btn.pack(side=tk.LEFT, padx=(0, 14))
+
+        tray_btn = tk.Button(
+            btn_frame, text="最小化到托盘", font=FONT_BODY,
+            bg=C_BG, fg=C_PRIMARY,
+            activebackground="#e8f0fe", activeforeground=C_PRIMARY,
+            relief="solid", bd=1,
+            padx=22, pady=7,
+            cursor="hand2",
+            command=do_tray
+        )
+        tray_btn.pack(side=tk.LEFT)
+
+        # "不再提醒" 复选框
+        self._close_remember_var = tk.BooleanVar(value=False)
+        cb = tk.Checkbutton(
+            content, text="不再提醒，记住我的选择",
+            variable=self._close_remember_var,
+            bg=C_BG, fg=C_MUTED, font=FONT_SMALL,
+            activebackground=C_BG, activeforeground=C_MUTED,
+            relief="flat", highlightthickness=0,
+            selectcolor=C_BG,
+            cursor="hand2"
+        )
+        cb.pack(anchor=tk.W)
+
+        def on_dialog_close():
+            result['action'] = 'cancel'
+            dialog.destroy()
+
+        dialog.protocol("WM_DELETE_WINDOW", on_dialog_close)
+        self.root.wait_window(dialog)
+        return result['action']
 
 
 # ========== 入口 ==========

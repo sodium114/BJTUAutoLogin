@@ -196,7 +196,11 @@ class AutoLoginApp:
     
     def _on_gui_closing(self):
         if self.gui and self.gui.root:
-            self.gui.on_closing()
+            action = self.gui.on_closing()
+            if action == 'tray':
+                return  # 最小化到托盘，不退出
+            if action == 'cancel':
+                return  # 用户取消关闭
         self.on_exit()
         sys.exit(0)
 
@@ -209,7 +213,14 @@ class AutoLoginApp:
     
     def start(self):
         logger.log("BJTU校园网自动登录程序启动")
-        
+
+        # 首次运行时固定到任务栏
+        try:
+            from gui import ensure_taskbar_pinned
+            ensure_taskbar_pinned()
+        except Exception:
+            pass
+
         # 启动系统托盘（如果可用）
         if TRAY_AVAILABLE:
             try:

@@ -3,5 +3,8 @@
   "password": "你的密码",
   "check_interval": 60,
   "retry_interval": 10,
-  "test_url": "https://www.baidu.com"
+  "test_url": "https://www.baidu.com",
+  "close_action": "ask",
+  "close_remember": false,
+  "taskbar_pinned": false
 }
