@@ -17,6 +17,35 @@ except:
     pass
 
 
+def _set_window_icon(window, icon_path):
+    """通过 Win32 API 设置窗口图标（开发模式和打包后均可用）"""
+    try:
+        import ctypes as ct
+        from ctypes import wintypes
+
+        hwnd = window._native_hwnd if hasattr(window, '_native_hwnd') else None
+        if not hwnd:
+            # 某些 pywebview 版本使用不同的属性名
+            for attr in ('_hwnd', 'hwnd', '_handle', '_native_handle'):
+                if hasattr(window, attr):
+                    hwnd = getattr(window, attr)
+                    break
+        if not hwnd:
+            return
+
+        # 加载图标
+        icon_handle = ct.windll.user32.LoadImageW(
+            0, icon_path, 1,  # IMAGE_ICON
+            0, 0, 0x00000010 | 0x00000040  # LR_LOADFROMFILE | LR_DEFAULTSIZE
+        )
+        if icon_handle:
+            # 设置窗口图标（大图标 + 小图标）
+            ct.windll.user32.SendMessageW(hwnd, 0x0080, 1, icon_handle)  # WM_SETICON ICON_BIG
+            ct.windll.user32.SendMessageW(hwnd, 0x0080, 0, icon_handle)  # WM_SETICON ICON_SMALL
+    except Exception:
+        pass  # 图标设置失败不影响主功能
+
+
 def get_resource_path(relative_path):
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
         base_path = sys._MEIPASS
@@ -261,6 +290,9 @@ class AutoLoginApp:
         import webview
 
         html_path = get_resource_path(os.path.join("web", "index.html"))
+        # PyWebView 某些版本对本地文件路径处理不稳定，统一用 file:// 协议
+        if not html_path.startswith("file://"):
+            html_path = "file:///" + html_path.replace("\\", "/")
         api = Api(self)
 
         self._window = webview.create_window(
@@ -274,6 +306,11 @@ class AutoLoginApp:
             easy_drag=True,
             background_color="#f5f7fa",
         )
+
+        # 设置窗口图标
+        icon_path = get_resource_path(os.path.join("resources", "icon.ico"))
+        if os.path.exists(icon_path):
+            _set_window_icon(self._window, icon_path)
 
         webview.start(debug=False)
 

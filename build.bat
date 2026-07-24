@@ -32,8 +32,9 @@ echo.
 
 if exist "dist" rmdir /s /q "dist" 2>nul
 if exist "build" rmdir /s /q "build" 2>nul
+if exist "BJTUAutoLogin.spec" del /q "BJTUAutoLogin.spec" 2>nul
 
-pyinstaller BJTUAutoLogin.spec --clean --noconfirm
+pyinstaller --onefile --windowed --clean --noconfirm --icon=resources/icon.ico --add-data "src/web;web" --add-data "resources;resources" --hidden-import=webview.platforms.winforms --hidden-import=clr --collect-all pywebview --name BJTUAutoLogin src/main.py
 
 if %errorlevel% neq 0 (
     echo.
