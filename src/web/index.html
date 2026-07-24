@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link data-mgx-overview="icon" rel="icon" href="https://public-frontend-1300249583.cos.ap-nanjing.myqcloud.com/commonfile/DefaultAppLogo.png" />
+    <title data-mgx-overview="title">BJTU 校园网自动登录</title>
+    <link rel="stylesheet" href="./style.css">
+    <meta data-mgx-overview="description" name="description" content="BJTU校园网自动登录工具，一键连接校园网，畅享高速网络。" />
+    <meta data-mgx-overview="og:title" property="og:title" content="BJTU 校园网自动登录" />
+    <meta data-mgx-overview="og:description" property="og:description" content="BJTU校园网自动登录工具，一键连接校园网，畅享高速网络。" />
+    <meta data-mgx-overview="og:image" property="og:image" content="https://public-frontend-1300249583.cos.ap-nanjing.myqcloud.com/commonfile/DefaultAppLogo.png" />
+    <meta data-mgx-overview="twitter:title" name="twitter:title" content="BJTU 校园网自动登录" />
+    <meta data-mgx-overview="twitter:description" name="twitter:description" content="BJTU校园网自动登录工具，一键连接校园网，畅享高速网络。" />
+    <meta data-mgx-overview="twitter:image" name="twitter:image" content="https://public-frontend-1300249583.cos.ap-nanjing.myqcloud.com/commonfile/DefaultAppLogo.png" />
+</head>
+
+<body>
+    <div class="app-window">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo-circle">
+                    <svg viewBox="0 0 60 60" width="50" height="50">
+                        <circle cx="30" cy="30" r="28" fill="none" stroke="#1a5fb4" stroke-width="2"/>
+                        <text x="30" y="24" text-anchor="middle" font-size="7" fill="#1a5fb4" font-weight="bold">北京交通大学</text>
+                        <text x="30" y="38" text-anchor="middle" font-size="5" fill="#1a5fb4">BEIJING TRAFFIC</text>
+                        <text x="30" y="45" text-anchor="middle" font-size="5" fill="#1a5fb4">UNIVERSITY</text>
+                    </svg>
+                </div>
+                <div class="header-title">
+                    <h1>BJTU 校园网自动登录</h1>
+                    <p>一键连接校园网，畅享高速网络</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="university-text">
+                    <span class="uni-cn">北京交通大学</span>
+                    <span class="uni-en">BEIJING TRAFFIC UNIVERSITY</span>
+                </div>
+                <div class="window-controls">
+                    <span class="control minimize">—</span>
+                    <span class="control close">✕</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Left Panel -->
+            <div class="left-panel">
+                <!-- Login Section -->
+                <div class="login-section card">
+                    <div class="section-title">
+                        <span class="icon-circle blue">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </span>
+                        <span>登录信息</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>学号</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </span>
+                            <input type="text" placeholder="请输入学号" id="studentId">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>密码</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                            </span>
+                            <input type="password" placeholder="请输入密码" id="password">
+                            <span class="input-icon-right" id="togglePassword">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+
+
+
+                    <button class="login-btn" id="loginBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"/>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                        <span>立即登录</span>
+                    </button>
+
+                    <div class="action-links">
+                        <div class="action-item">
+                            <span class="action-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                    <polyline points="17 21 17 13 7 13 7 21"/>
+                                    <polyline points="7 3 7 8 15 8"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <span class="action-title">保存配置</span>
+                                <span class="action-desc">保存学号和密码，下次自动填充</span>
+                            </div>
+                        </div>
+                        <hr class="action-divider">
+                        <div class="action-item">
+                            <span class="action-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <span class="action-title">日志查看</span>
+                                <span class="action-desc">查看登录日志记录</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Settings -->
+                <div class="settings-section card">
+                    <div class="section-title">
+                        <span class="icon-circle blue">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                        </span>
+                        <span>系统设置</span>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <span class="setting-label">开机自启</span>
+                            <span class="setting-desc">开机后自动运行并登录校园网</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked id="autoStart">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="right-panel">
+                <!-- Network Status -->
+                <div class="network-section card">
+                    <div class="section-title">
+                        <span class="icon-circle blue">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                                <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                                <line x1="12" y1="20" x2="12.01" y2="20"/>
+                            </svg>
+                        </span>
+                        <span>网络状态</span>
+                    </div>
+
+                    <div class="status-item">
+                        <div class="status-left">
+                            <div class="status-icon wifi">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2">
+                                    <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                                    <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                                    <line x1="12" y1="20" x2="12.01" y2="20"/>
+                                </svg>
+                            </div>
+                            <div class="status-text">
+                                <span class="status-label">WiFi 状态</span>
+                                <span class="status-value connected">已连接：BJTU-Student</span>
+                            </div>
+                        </div>
+                        <div class="status-right">
+                            <div class="signal-bars">
+                                <span class="bar bar1"></span>
+                                <span class="bar bar2"></span>
+                                <span class="bar bar3"></span>
+                                <span class="bar bar4"></span>
+                                <span class="bar bar5"></span>
+                            </div>
+                            <span class="status-badge connected">已连接</span>
+                        </div>
+                    </div>
+
+                    <div class="status-item">
+                        <div class="status-left">
+                            <div class="status-icon network">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="2" y1="12" x2="22" y2="12"/>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                </svg>
+                            </div>
+                            <div class="status-text">
+                                <span class="status-label">网络状态</span>
+                                <span class="status-value connected">已连接到互联网</span>
+                            </div>
+                        </div>
+                        <div class="status-right">
+                            <div class="globe-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="2" y1="12" x2="22" y2="12"/>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                </svg>
+                            </div>
+                            <span class="status-badge normal">正常</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Log Section -->
+                <div class="log-section card">
+                    <div class="log-header">
+                        <div class="section-title">
+                            <span class="icon-circle light-blue">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                </svg>
+                            </span>
+                            <span>日志查看</span>
+                        </div>
+                        <button class="clear-log-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                            <span>清空日志</span>
+                        </button>
+                    </div>
+                    <div class="log-content" id="logContent">
+                        <div class="log-entry">
+                            <span class="log-time">[12:30:15]</span>
+                            <span class="log-tag info">[信息]</span>
+                            <span class="log-msg">程序启动</span>
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-time">[12:30:16]</span>
+                            <span class="log-tag info">[信息]</span>
+                            <span class="log-msg">检测网络环境...</span>
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-time">[12:30:16]</span>
+                            <span class="log-tag info">[信息]</span>
+                            <span class="log-msg">已连接 WiFi：BJTU-Student</span>
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-time">[12:30:17]</span>
+                            <span class="log-tag info">[信息]</span>
+                            <span class="log-msg">开始登录校园网...</span>
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-time">[12:30:18]</span>
+                            <span class="log-tag success">[成功]</span>
+                            <span class="log-msg">登录成功！</span>
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-time">[12:30:18]</span>
+                            <span class="log-tag info">[信息]</span>
+                            <span class="log-msg">已连接到互联网</span>
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-time">[12:30:18]</span>
+                            <span class="log-tag info">[信息]</span>
+                            <span class="log-msg">登录过程完成</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-left">
+                <span>版本：v1.0.0</span>
+            </div>
+            <div class="footer-center">
+                <span>© Sodium</span>
+            </div>
+            <div class="footer-right">
+            </div>
+        </footer>
+    </div>
+
+    <script type="module" src="./script.js"></script>
+</body>
+
+</html>

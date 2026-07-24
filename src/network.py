@@ -52,8 +52,8 @@ def is_wifi_connected():
     else:
         return True
 
-def _is_wifi_connected_windows():
-    """Windows系统检测WiFi连接 - 检测到SSID即为已连接"""
+def get_wifi_ssid():
+    """获取当前连接的WiFi SSID名称，未连接返回空字符串"""
     try:
         result = subprocess.run(
             ["netsh", "wlan", "show", "interfaces"],
@@ -63,15 +63,17 @@ def _is_wifi_connected_windows():
             timeout=10,
             creationflags=CREATE_NO_WINDOW
         )
-        # 如果输出中有 SSID 且不为空，说明WiFi已连接
         for line in result.stdout.splitlines():
             if line.strip().startswith("SSID") and ":" in line:
                 ssid = line.split(":", 1)[1].strip()
-                if ssid:
-                    return True
-        return False
+                return ssid if ssid else ""
+        return ""
     except:
-        return False
+        return ""
+
+def _is_wifi_connected_windows():
+    """Windows系统检测WiFi连接 - 检测到SSID即为已连接"""
+    return bool(get_wifi_ssid())
 
 def _is_wifi_connected_mac():
     """Mac系统检测WiFi连接"""
