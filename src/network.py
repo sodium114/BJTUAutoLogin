@@ -2,9 +2,7 @@ import requests
 import urllib3
 import subprocess
 import platform
-import os
 import sys
-from datetime import datetime
 
 # 禁用 SSL 警告（校园网环境经常有自签名证书）
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -15,12 +13,6 @@ if sys.platform == "win32":
     CREATE_NO_WINDOW = 0x08000000
 else:
     CREATE_NO_WINDOW = 0
-
-def get_app_path():
-    """获取应用程序所在目录"""
-    if getattr(sys, 'frozen', False):
-        return os.path.dirname(sys.executable)
-    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def is_online(url):
     """检测是否能访问外网 - 不验证SSL证书（校园网环境需要）"""
@@ -89,81 +81,4 @@ def _is_wifi_connected_mac():
     except:
         return True
 
-class SimpleTrafficMonitor:
-    """简单的流量统计器 - 基于连接时间估算"""
-    
-    def __init__(self):
-        self.start_time = None
-        self.last_save_time = None
-        self.total_bytes = 0
-        self.is_online = False
-        self.data_file = os.path.join(get_app_path(), "traffic_data.json")
-        self._load_data()
-    
-    def _load_data(self):
-        """从文件加载历史数据"""
-        try:
-            if os.path.exists(self.data_file):
-                import json
-                with open(self.data_file, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    self.total_bytes = data.get('total_bytes', 0)
-        except:
-            pass
-    
-    def _save_data(self):
-        """保存数据到文件"""
-        try:
-            import json
-            with open(self.data_file, 'w', encoding='utf-8') as f:
-                json.dump({'total_bytes': self.total_bytes}, f)
-        except:
-            pass
-    
-    def start(self):
-        """开始统计"""
-        self.start_time = datetime.now()
-        self.last_save_time = datetime.now()
-    
-    def update_online_status(self, online):
-        """更新在线状态"""
-        if online and not self.is_online:
-            # 刚连上
-            if not self.start_time:
-                self.start_time = datetime.now()
-        self.is_online = online
-    
-    def tick(self):
-        """每秒钟调用一次，更新统计"""
-        if self.is_online:
-            # 估算流量 - 假设每秒平均 50KB
-            self.total_bytes += 50 * 1024
-        
-        # 每5分钟保存一次
-        if self.last_save_time and (datetime.now() - self.last_save_time).seconds > 300:
-            self._save_data()
-            self.last_save_time = datetime.now()
-    
-    def get_uptime(self):
-        """获取连接时长"""
-        if not self.start_time:
-            return "0:00:00"
-        delta = datetime.now() - self.start_time
-        hours, remainder = divmod(delta.seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        return f"{hours}:{minutes:02d}:{seconds:02d}"
-    
-    def get_traffic_str(self):
-        """获取流量字符串"""
-        if self.total_bytes < 1024:
-            return f"{self.total_bytes} B"
-        elif self.total_bytes < 1024 * 1024:
-            return f"{self.total_bytes / 1024:.2f} KB"
-        elif self.total_bytes < 1024 * 1024 * 1024:
-            return f"{self.total_bytes / (1024 * 1024):.2f} MB"
-        else:
-            return f"{self.total_bytes / (1024 * 1024 * 1024):.2f} GB"
-    
-    def reset_session(self):
-        """重置本次会话计时"""
-        self.start_time = datetime.now()
+

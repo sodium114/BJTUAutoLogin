@@ -25,12 +25,6 @@ def get_resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-def get_app_path():
-    if getattr(sys, 'frozen', False):
-        return os.path.dirname(sys.executable)
-    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
 def get_config_path():
     app_path = get_app_path()
     for p in [os.path.join(app_path, "config.json"),
@@ -41,7 +35,7 @@ def get_config_path():
 
 
 try:
-    from logger import logger
+    from logger import logger, get_app_path
     from network import is_online, is_wifi_connected, get_wifi_ssid
     from portal import Portal
 except Exception as e:
